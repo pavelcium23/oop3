@@ -21,6 +21,7 @@ public class Main {
         assistant.assignDisplay(display3);
 
         assistant.assist();
+        assistant.buyDisplay(display2);
 
         Scanner scanner = new Scanner(System.in);
         int choice = scanner.nextInt();
