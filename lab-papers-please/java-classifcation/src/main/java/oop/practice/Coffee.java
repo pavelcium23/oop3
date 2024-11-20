@@ -7,7 +7,7 @@ enum SyrupType{
     MACADAMIA, VANILLA, COCONUT, CARAMEL, CHOCOLATE, POPCORN
 }
 
-class Coffee {
+abstract class Coffee {
     private Intensity coffeeIntensity;
     private String name;
 
@@ -20,9 +20,15 @@ class Coffee {
         return name;
     }
 
-    public Intensity getCoffeeIntensity() {
-        return coffeeIntensity;
+    public void PrintCoffeeDetails() {
+        System.out.println("Coffee Intensity: " + coffeeIntensity);
     }
+
+    public void PrintDetails(){
+        PrintCoffeeDetails();
+    }
+
+    public abstract void printDetails();
 }
 
 class Americano extends Coffee {
@@ -31,9 +37,11 @@ class Americano extends Coffee {
         super(intensityOfCoffee,"Americano");
         this.mlOfWater = mlOfWater;
     }
-    public int getMlOfWater() {
-        return mlOfWater;
-    }
+
+    @Override
+    public void printDetails() {
+        super.PrintCoffeeDetails();
+        System.out.println(getName() + " water: " + mlOfWater + " ml");}
 }
 
 class Cappuccino extends Coffee {
@@ -42,22 +50,36 @@ class Cappuccino extends Coffee {
         super(intensity,"Cappuccino");
         this.mlOfMilk = mlOfMilk;
     }
-    public int getMlOfMilk() {
-        return mlOfMilk;
-    }
+    @Override
+    public void printDetails() {
+        super.PrintCoffeeDetails();
+        System.out.println(getName() + " milk: " + mlOfMilk + " ml");}
 }
 
 class SyrupCappuccino extends Cappuccino {
     private SyrupType syrup;
+    private int mltrOfMilk;
     public SyrupCappuccino(Intensity intensityCoffee,int mltrOfMilk, SyrupType syrup) {
         super(intensityCoffee,mltrOfMilk);
         this.syrup = syrup;
+        this.mltrOfMilk = mltrOfMilk;
     }
     public SyrupType getSyrup() {
         return syrup;
     }
+    public int getMltrOfMilk() {
+        return mltrOfMilk;
+    }
+
+    @Override
+    public void printDetails() {
+        super.PrintDetails();
+        System.out.println("Syrup Type: " + syrup );
+        System.out.println(getName() + " milk: " + mltrOfMilk + " ml");
+    }
     @Override
     public String getName() {
+
         return "SyrupCappuccino";
     }
 }
@@ -65,15 +87,23 @@ class SyrupCappuccino extends Cappuccino {
 class PumpkinSpiceLatte extends Coffee {
     private int mgOfPumpkinSpice;
     private int mlOfMilk;
+
     public PumpkinSpiceLatte(Intensity intensityOfCoffee, int mlOfMilk, int mgOfPumpkinSpice) {
         super(intensityOfCoffee, "PumpkinSpiceLatte");
         this.mgOfPumpkinSpice = mgOfPumpkinSpice;
+        this.mlOfMilk = mlOfMilk;
     }
-    public int getMgOfPumpkinSpice() {
-        return mgOfPumpkinSpice;
+
+    @Override
+    public void printDetails() {
+        super.PrintDetails();
+        System.out.println("Pumpkin spice: " + mgOfPumpkinSpice + " mg");
+        System.out.println(getName() + " milk: " + mlOfMilk + " ml");
     }
-    public int getMlOfMilk() {
-        return mlOfMilk;
+
+    @Override
+    public String getName() {
+        return "PumpkinSpiceLatte";
     }
 }
 
