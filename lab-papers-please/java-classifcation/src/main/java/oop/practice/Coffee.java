@@ -1,9 +1,10 @@
 package oop.practice;
 
-enum Intensity{
-LIGHT, NORMAL, STRONG
+enum Intensity {
+    LIGHT, NORMAL, STRONG
 }
-enum SyrupType{
+
+enum SyrupType {
     MACADAMIA, VANILLA, COCONUT, CARAMEL, CHOCOLATE, POPCORN
 }
 
@@ -20,91 +21,93 @@ abstract class Coffee {
         return name;
     }
 
-    public void PrintCoffeeDetails() {
-        System.out.println("Coffee Intensity: " + coffeeIntensity);
+    public void makeReceipt() {
+        System.out.println("\nNow Making " + getName());
+        System.out.println("Intensity is set to " + coffeeIntensity);
     }
-
-    public void PrintDetails(){
-        PrintCoffeeDetails();
-    }
-
-    public abstract void printDetails();
 }
 
 class Americano extends Coffee {
     private int mlOfWater;
+
     public Americano(Intensity intensityOfCoffee, int mlOfWater) {
-        super(intensityOfCoffee,"Americano");
+        super(intensityOfCoffee, "Americano");
         this.mlOfWater = mlOfWater;
     }
 
-    @Override
-    public void printDetails() {
-        super.PrintCoffeeDetails();
-        System.out.println(getName() + " water: " + mlOfWater + " ml");}
+    public final Americano makeAmericano() {
+        makeReceipt();
+        System.out.println("Pouring in " + mlOfWater + " ml of water");
+        return this;
+    }
 }
 
 class Cappuccino extends Coffee {
     private int mlOfMilk;
+
     public Cappuccino(Intensity intensity, int mlOfMilk) {
-        super(intensity,"Cappuccino");
+        super(intensity, "Cappuccino");
         this.mlOfMilk = mlOfMilk;
     }
+
     @Override
-    public void printDetails() {
-        super.PrintCoffeeDetails();
-        System.out.println(getName() + " milk: " + mlOfMilk + " ml");}
+    public void makeReceipt() {
+        super.makeReceipt();
+        System.out.println("Adding " + mlOfMilk + " ml of milk");
+    }
+
+    public final Cappuccino makeCappuccino() {
+        makeReceipt();
+        return this;
+    }
 }
 
 class SyrupCappuccino extends Cappuccino {
     private SyrupType syrup;
-    private int mltrOfMilk;
-    public SyrupCappuccino(Intensity intensityCoffee,int mltrOfMilk, SyrupType syrup) {
-        super(intensityCoffee,mltrOfMilk);
+
+    public SyrupCappuccino(Intensity intensityCoffee, int mlOfMilk, SyrupType syrup) {
+        super(intensityCoffee, mlOfMilk);
         this.syrup = syrup;
-        this.mltrOfMilk = mltrOfMilk;
-    }
-    public SyrupType getSyrup() {
-        return syrup;
-    }
-    public int getMltrOfMilk() {
-        return mltrOfMilk;
     }
 
-    @Override
-    public void printDetails() {
-        super.PrintDetails();
-        System.out.println("Syrup Type: " + syrup );
-        System.out.println(getName() + " milk: " + mltrOfMilk + " ml");
-    }
     @Override
     public String getName() {
+        return "Syrup Cappuccino";
+    }
 
-        return "SyrupCappuccino";
+    @Override
+    public void makeReceipt() {
+        super.makeReceipt();
+        System.out.println("Adding " + syrup + " syrup");
+    }
+
+    public final SyrupCappuccino makeSyrupCappuccino() {
+        makeReceipt();
+        return this;
     }
 }
 
-class PumpkinSpiceLatte extends Coffee {
+class PumpkinSpiceLatte extends Cappuccino {
     private int mgOfPumpkinSpice;
-    private int mlOfMilk;
 
     public PumpkinSpiceLatte(Intensity intensityOfCoffee, int mlOfMilk, int mgOfPumpkinSpice) {
-        super(intensityOfCoffee, "PumpkinSpiceLatte");
+        super(intensityOfCoffee, mlOfMilk);
         this.mgOfPumpkinSpice = mgOfPumpkinSpice;
-        this.mlOfMilk = mlOfMilk;
-    }
-
-    @Override
-    public void printDetails() {
-        super.PrintDetails();
-        System.out.println("Pumpkin spice: " + mgOfPumpkinSpice + " mg");
-        System.out.println(getName() + " milk: " + mlOfMilk + " ml");
     }
 
     @Override
     public String getName() {
-        return "PumpkinSpiceLatte";
+        return "Pumpkin Spice Latte";
+    }
+
+    @Override
+    public void makeReceipt() {
+        super.makeReceipt();
+        System.out.println("Adding " + mgOfPumpkinSpice + " mg of pumpkin spice");
+    }
+
+    public final PumpkinSpiceLatte makePumpkinSpiceLatte() {
+        makeReceipt();
+        return this;
     }
 }
-
-

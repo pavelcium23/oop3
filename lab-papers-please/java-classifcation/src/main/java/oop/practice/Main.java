@@ -6,15 +6,12 @@ public class Main {
         Coffee cappuccino = new Cappuccino(Intensity.NORMAL, 50);
         Coffee syrupCappuccino = new SyrupCappuccino(Intensity.LIGHT, 60, SyrupType.VANILLA);
         Coffee pumpkinSpiceLatte = new PumpkinSpiceLatte(Intensity.NORMAL, 70, 25);
-        System.out.println("\nAmericano Details:");
-        americano.printDetails();
-        System.out.println("\nCappuccino Details:");
-        cappuccino.printDetails();
-        System.out.println("\nSyrup Cappuccino Details:");
-        syrupCappuccino.printDetails();
 
-        System.out.println("\nPumpkin Spice Latte Details:");
-        pumpkinSpiceLatte.printDetails();
+        ((Cappuccino) cappuccino).makeCappuccino();
+        ((Americano) americano).makeAmericano();
+        ((SyrupCappuccino) syrupCappuccino).makeSyrupCappuccino();
+        ((PumpkinSpiceLatte) pumpkinSpiceLatte).makePumpkinSpiceLatte();
+
 
     }
 }
