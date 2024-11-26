@@ -12,16 +12,20 @@ abstract class Coffee {
     private Intensity coffeeIntensity;
     private String name;
 
-    public Coffee(Intensity coffeeIntensity, String name) {
+    protected Coffee(Intensity coffeeIntensity, String name) {
         this.coffeeIntensity = coffeeIntensity;
         this.name = name;
     }
 
-    public String getName() {
+    protected String getName() {
         return name;
     }
 
-    public void makeReceipt() {
+    protected Intensity getCoffeeIntensity() {
+        return coffeeIntensity;
+    }
+
+    protected void makeReceipt() {
         System.out.println("\nNow Making " + getName());
         System.out.println("Intensity is set to " + coffeeIntensity);
     }
@@ -35,9 +39,14 @@ class Americano extends Coffee {
         this.mlOfWater = mlOfWater;
     }
 
+    @Override
+    public void makeReceipt() {
+        super.makeReceipt();
+        System.out.println("Pouring in " + mlOfWater + " ml of water");
+    }
+
     public final Americano makeAmericano() {
         makeReceipt();
-        System.out.println("Pouring in " + mlOfWater + " ml of water");
         return this;
     }
 }
