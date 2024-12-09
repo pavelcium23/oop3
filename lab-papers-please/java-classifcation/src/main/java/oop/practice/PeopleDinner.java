@@ -1,5 +1,4 @@
 package oop.practice;
-// Implementation for Dineable: PeopleDinner
 public class PeopleDinner implements Dineable {
     private int peopleServed = 0;
     @Override
