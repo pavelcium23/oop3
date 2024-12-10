@@ -1,9 +1,10 @@
 package oop.practice;
+
+import java.util.List;
 public interface Queue<T> {
-    void enqueue(T item);
+    void enqueue(T element);
     T dequeue();
-    int size();
-
     boolean isEmpty();
-
+    int size();
+    List<T> getQueueList();
 }

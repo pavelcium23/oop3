@@ -1,12 +1,21 @@
+
 package oop.practice;
+
 public class PeopleDinner implements Dineable {
-    private int peopleServed = 0;
+    private static int peopleServed = 0;
+
     @Override
-    public void serveDinner(String carId) {
-        System.out.println("Serving dinner to people in car " + carId + ".");
+    public void serveDinner(String carID){
+        System.out.println("Serving dinner to people directly in the  car " + carID);
         peopleServed++;
     }
-    public int getPeopleServed() {
+
+    public static int getPeopleServed(){
         return peopleServed;
+    }
+
+    @Override
+    public void serveDinner(int carId) {
+
     }
 }

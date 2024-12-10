@@ -1,55 +1,69 @@
 package oop.practice;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
-import java.util.List;
 public class Main {
+    private static final int PROCESSING_INTERVAL_SEC = 2; // 3 seconds interval
+    private static final String QUEUE_DIR = "/Users/suleimanpasa/oop-course-repo/lab-papers-please/java-classifcation/src/main/java/queue";
+    private static Semaphore semaphore;
+    private static ObjectMapper objectMapper = new ObjectMapper();
+    private static ScheduledExecutorService executorService;
+
     public static void main(String[] args) {
+        CarStation gasStation = new CarStation();
+        CarStation electricStation = new CarStation();
 
-        CarStation gasStation = new CarStation(new SimpleQueue<>(), new PeopleDinner(), new GasStation());
-        CarStation electricStation = new CarStation(new SimpleQueue<>(), new RobotDinner(), new ElectricStation());
-        Semaphore semaphore = new Semaphore(gasStation, electricStation);
+        semaphore = new Semaphore(gasStation, electricStation);
+        executorService = Executors.newSingleThreadScheduledExecutor();
 
-        CarReader carJsonReader = new CarReader();
-        String filePath = "cars.json";
-        List<Car> cars = carJsonReader.readCarsFromJson(filePath);
+        // Start processing cars at a fixed interval
+        executorService.scheduleAtFixedRate(() -> {
+            if (!proccessSingleCarFromFile()) {
+                System.out.println("All cars have been processed. Stopping file processing.");
+                executorService.shutdown(); // Stop processing cars
+                serveCarsFromStation();     // Begin serving cars
+            }
+        }, 0, PROCESSING_INTERVAL_SEC, TimeUnit.SECONDS);
+    }
 
+    private static boolean proccessSingleCarFromFile() {
+        File queueDir = new File(QUEUE_DIR);
+        File[] files = queueDir.listFiles((dir, name) -> name.endsWith(".json"));
 
-        if (cars != null) {
-            for (Car car : cars) {
-                semaphore.assignCarToStation(car);
+        if (files != null && files.length > 0) {
+            File file = files[0]; // Process the first file in the directory
+            try {
+                String content = new String(Files.readAllBytes(Paths.get(file.getPath())));
+                Car car = objectMapper.readValue(content, Car.class);
+                addCarsToStation(car);
+                Files.delete(file.toPath()); // Delete file after processing
+                System.out.println("Processed car: " + car);
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
+        return false; // No files to process
+    }
 
-        System.out.println("Before serving cars:");
-        System.out.println("Gas Car Station Queue: " + gasStation.getQueueSize());
-        System.out.println("Electric Car Station Queue: " + electricStation.getQueueSize());
-
-
-        System.out.println("\nServing cars in gas station:");
-        gasStation.serveCars();
-
-        System.out.println("\nServing cars in electric station:");
-        electricStation.serveCars();
-
-        System.out.println("\nAfter serving cars:");
-        System.out.println("Gas Car Station Queue: " + gasStation.getQueueSize());
-        System.out.println("Electric Car Station Queue: " + electricStation.getQueueSize());
-
-        if (gasStation.getRefuelable() instanceof GasStation) {
-            System.out.println("\nGas cars refueled: " + ((GasStation) gasStation.getRefuelable()).getGasCarsRefueled());
+    private static void addCarsToStation(Car car) {
+        if ("GAS".equalsIgnoreCase(car.getFuelType())) {
+            semaphore.gasStation().addCar(car);
+        } else if ("ELECTRIC".equalsIgnoreCase(car.getFuelType())) {
+            semaphore.electricStation().addCar(car);
         }
+    }
 
-
-        if (electricStation.getRefuelable() instanceof ElectricStation) {
-            System.out.println("Electric cars refueled: " + ((ElectricStation) electricStation.getRefuelable()).getElectricCarsRefueled());
-        }
-
-
-        if (gasStation.getDineable() instanceof PeopleDinner) {
-            System.out.println("People served: " + ((PeopleDinner) gasStation.getDineable()).getPeopleServed());
-        }
-
-        if (electricStation.getDineable() instanceof RobotDinner) {
-            System.out.println("Robots served: " + ((RobotDinner) electricStation.getDineable()).getRobotsServed());
-        }
+    private static void serveCarsFromStation() {
+        System.out.println("Serving all cars...");
+        semaphore.gasStation().serveGasCars();
+        semaphore.electricStation().serveElectricCars();
+        System.out.println("All cars have been served.");
     }
 }

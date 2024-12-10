@@ -1,31 +1,54 @@
 package oop.practice;
-
-import java.util.NoSuchElementException;
 import java.util.LinkedList;
+import java.util.List;
 
 public class SimpleQueue<T> implements Queue<T> {
-    private LinkedList<T> list = new LinkedList<>();
-
+    private static class Node<T> {
+        T data;
+        Node<T> next;
+        Node(T data) {
+            this.data = data;
+        }
+    }
+    private Node<T> front;
+    private Node<T> rear;
+    private int size;
     @Override
     public void enqueue(T item) {
-        list.addLast(item);
+        Node<T> newNode = new Node<>(item);
+        if (rear != null) {
+            rear.next = newNode;
+        }
+        rear = newNode;
+        if (front == null) {
+            front = rear;
+        }
+        size++;
     }
-
     @Override
     public T dequeue() {
         if (isEmpty()) {
-            throw new NoSuchElementException("Queue is empty");
+            throw new IllegalStateException("Queue is empty");
         }
-        return list.removeFirst();
+        T item = front.data;
+        front = front.next;
+        if (front == null) { // Queue becomes empty
+            rear = null;
+        }
+        size--;
+        return item;
     }
-
     @Override
     public boolean isEmpty() {
-        return list.isEmpty();
+        return front == null;
+    }
+    @Override
+    public int size() {
+        return size;
     }
 
     @Override
-    public int size() {
-        return list.size();
+    public List<T> getQueueList() {
+        return List.of();
     }
 }

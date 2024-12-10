@@ -1,4 +1,8 @@
 package oop.practice;
 public interface Dineable {
-    void serveDinner(String carId);
+
+
+    void serveDinner(String carID);
+
+    void serveDinner(int carId);
 }

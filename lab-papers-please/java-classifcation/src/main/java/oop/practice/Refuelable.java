@@ -1,4 +1,4 @@
 package oop.practice;
 public interface Refuelable {
-    void refuel(String carId);
+    void refuel(int carId);
 }
